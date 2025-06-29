@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Municipal Waste Classification</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center center/cover;
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        /* Header Navigation */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #4CAF50;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer; /* Make logo clickable */
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-menu li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-menu li a:hover {
+            color: #4CAF50;
+            transform: translateY(-2px);
+        }
+
+        .nav-menu li a.active {
+            color: #4CAF50;
+        }
+
+        .nav-menu li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #4CAF50;
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu li a:hover::after,
+        .nav-menu li a.active::after {
+            width: 100%;
+        }
+
+        /* Hero Section (Landing Page) */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 100px 20px 20px;
+            width: 100%; /* Ensure it takes full width */
+        }
+
+        .hero-content {
+            max-width: 800px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            line-height: 1.2;
+        }
+
+        .hero h1 .highlight {
+            color: #4CAF50;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            color: #e0e0e0;
+            line-height: 1.6;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Action Buttons (Updated for single button) */
+        .action-buttons {
+            display: flex;
+            justify-content: center; /* Center the single button */
+            margin-top: 50px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            min-width: 200px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.6);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 20px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            width: 100%;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .features h2 {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: #4CAF50;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #4CAF50;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .feature-card p {
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        /* Waste Classification Section */
+        .waste-classification-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://i.postimg.cc/qvxNkDpT/image-b72c77.jpg') no-repeat center center/cover;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            padding: 20px;
+            width: 100%;
+            display: none; /* Hidden by default */
+            position: relative; /* For positioning back button */
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(15px);
+            padding: 40px 50px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .waste-classification-section h1 {
+            color: #4CAF50;
+            margin-bottom: 25px;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .waste-classification-section p {
+            color: #e0e0e0;
+            margin-bottom: 35px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px dashed #4CAF50;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #4CAF50;
+        }
+
+        .file-input-label:hover {
+            background: rgba(76, 175, 80, 0.2);
+            border-color: #45a049;
+        }
+
+        input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        button[type="submit"] {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+            min-width: 200px;
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.6);
+        }
+
+        /* About Us Section Styles */
+        .about-us-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://i.postimg.cc/Gmnxr9fg/3e9b7ef91472bd421de1afc526d2b428.jpg') no-repeat center center/cover;
+            background-size: cover;
+            background-attachment: fixed; /* Makes background fixed */
+            color: white; /* Changed text color to white for better contrast */
+            padding: 80px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            display: none;
+            position: relative; /* For positioning back button */
+        }
+
+        .about-us-section .header-about {
+            background-color: rgba(46, 125, 50, 0.7); /* Adjusted transparency here */
+            color: white;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+            max-width: 1000px; /* Constrain header width too */
+            margin-bottom: 30px;
+            position: static;
+            backdrop-filter: blur(5px); /* Added blur for header */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            border-radius: 10px; /* Match content sections */
+        }
+
+        .about-us-section .header-about h1 {
+            color: white;
+            margin-bottom: 5px;
+        }
+        .about-us-section .header-about p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1em;
+        }
+
+        .about-us-section .content-section {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7); /* Adjusted transparency here */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            width: 100%;
+            box-sizing: border-box;
+            color: #333; /* Ensure text color is dark for readability on white background */
+            backdrop-filter: blur(3px); /* Slightly blur content for better background visibility */
+        }
+
+        .about-us-section .content-section h2 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-size: 2em;
+        }
+        .about-us-section .content-section p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #555;
+        }
+        .about-us-section .content-section ul {
+            padding-left: 25px;
+            list-style: disc;
+            color: #555;
+        }
+        .about-us-section .content-section ul li {
+            margin-bottom: 10px;
+        }
+        .about-us-section .content-section strong {
+            color: #2e7d32;
+        }
+
+        /* Contact Us Section Styles */
+        .contact-us-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://i.postimg.cc/bJjN6cV5/save-our-planet-concept-people-prepare-day-earth-male-female-characters-care-plants-sweeping-ground.webp') no-repeat center center/cover;
+            background-size: cover;
+            background-attachment: fixed; /* Makes background fixed */
+            color: white; /* Changed text color to white for better contrast */
+            padding: 80px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            display: none;
+            position: relative; /* For positioning back button */
+        }
+
+        .contact-us-section .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white; /* Title color */
+            max-width: 800px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6); /* Adjusted transparency here */
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        .contact-us-section .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #4CAF50; /* Changed to green for consistency */
+        }
+        .contact-us-section .section-title p {
+            font-size: 1.1rem;
+            color: #e0e0e0; /* Lighter text for paragraph */
+            margin: 0 auto;
+        }
+
+        .contact-us-section .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .contact-us-section .col-lg-5,
+        .contact-us-section .col-lg-7 {
+            flex: 1;
+            padding: 15px;
+            box-sizing: border-box;
+            min-width: 300px;
+        }
+        @media (min-width: 992px) {
+            .contact-us-section .col-lg-5 {
+                flex: 0 0 41.666667%;
+                max-width: 41.666667%;
+            }
+            .contact-us-section .col-lg-7 {
+                flex: 0 0 58.333333%;
+                max-width: 58.333333%;
+            }
+            .contact-us-section .mt-lg-0 {
+                margin-top: 0 !important;
+            }
+        }
+        @media (max-width: 991px) {
+            .contact-us-section .col-lg-5,
+            .contact-us-section .col-lg-7 {
+                margin-top: 30px;
+            }
+        }
+
+        .contact-us-section .info {
+            background: rgba(255, 255, 255, 0.7); /* Adjusted transparency here */
+            padding: 30px;
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            color: #333;
+            backdrop-filter: blur(3px); /* Slightly blur content for better background visibility */
+        }
+        .contact-us-section .info div {
+            display: flex;
+            align-items: center;
+        }
+        .contact-us-section .info i {
+            font-size: 24px;
+            color: #2e7d32;
+            border-radius: 50%;
+            padding: 8px;
+            border: 2px dotted #c5e1a5;
+            margin-right: 15px;
+        }
+        .contact-us-section .info h4 {
+            padding: 0;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #2e7d32;
+        }
+        .contact-us-section .info p {
+            padding: 0;
+            margin-bottom: 0;
+            font-size: 14px;
+            color: #555;
+        }
+        .contact-us-section .info iframe {
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+
+        .contact-us-section .php-email-form {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.7); /* Adjusted transparency here */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            color: #333;
+            backdrop-filter: blur(3px); /* Slightly blur content for better background visibility */
+        }
+        .contact-us-section .php-email-form .form-group {
+            margin-bottom: 20px;
+        }
+        .contact-us-section .php-email-form label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        .contact-us-section .php-email-form input,
+        .contact-us-section .php-email-form textarea {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            color: #333;
+        }
+        .contact-us-section .php-email-form input:focus,
+        .contact-us-section .php-email-form textarea:focus {
+            border-color: #2e7d32;
+            outline: none;
+        }
+        .contact-us-section .php-email-form textarea {
+            resize: vertical;
+        }
+        .contact-us-section .php-email-form .text-center {
+            text-align: center;
+        }
+        .contact-us-section .php-email-form button[type="submit"] {
+            background: #2e7d32;
+            border: 0;
+            padding: 12px 30px;
+            color: white;
+            transition: 0.3s;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        .contact-us-section .php-email-form button[type="submit"]:hover {
+            background: #4CAF50;
+        }
+        .contact-us-section .my-3 {
+            margin-top: 1rem !important;
+            margin-bottom: 1rem !important;
+        }
+        .contact-us-section .loading, .contact-us-section .error-message, .contact-us-section .sent-message {
+            display: none;
+            text-align: center;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        .contact-us-section .loading {
+            background: #e0f7fa;
+            color: #00838f;
+        }
+        .contact-us-section .error-message {
+            background: #ffebee;
+            color: #c62828;
+        }
+        .contact-us-section .sent-message {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+
+        /* Back button positioning */
+        /* These buttons are now positioned relative to their parent section */
+        .back-btn, .back-btn-about, .back-btn-contact {
+            position: absolute;
+            z-index: 1001; /* Ensure it's above other content */
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: none; /* Hidden by default, shown by JS */
+            top: 100px; /* Default top position, adjust as needed */
+            left: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .back-btn { /* For waste classification page */
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .back-btn-about, .back-btn-contact { /* For about and contact pages */
+            background: rgba(0, 0, 0, 0.5); /* Darker background for lighter pages */
+            color: white;
+        }
+
+        .back-btn:hover, .back-btn-about:hover, .back-btn-contact:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 30px 20px;
+            text-align: center;
+            color: #ccc;
+            width: 100%;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .container {
+                padding: 30px 25px;
+            }
+
+            .waste-classification-section h1 {
+                font-size: 2rem;
+            }
+
+            .waste-classification-section p {
+                font-size: 1rem;
+            }
+
+            .about-us-section .content-section,
+            .contact-us-section .info,
+            .contact-us-section .php-email-form {
+                padding: 15px;
+                margin: 10px auto;
+            }
+            .about-us-section h2,
+            .contact-us-section .section-title h2 {
+                font-size: 1.8em;
+            }
+            /* Adjust back button for smaller screens */
+            .back-btn, .back-btn-about, .back-btn-contact {
+                top: 80px; /* Closer to the top for less space */
+                left: 10px;
+            }
+        }
+        /* Custom modal for alerts (replaces alert()) */
+        .custom-modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 2000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .custom-modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+            text-align: center;
+            color: #333;
+            animation-name: animatetop;
+            animation-duration: 0.4s
+        }
+
+        /* Add Animation */
+        @keyframes animatetop {
+            from {top: -300px; opacity: 0}
+            to {top: 0; opacity: 1}
+        }
+
+        .custom-modal-close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .custom-modal-close-button:hover,
+        .custom-modal-close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .custom-modal-content button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        .custom-modal-content button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo" id="main-logo">Municipal Waste Classification</div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="#" class="active" id="home-nav-link">Home</a></li>
+                    <li><a href="#" id="about-nav-link">About</a></li>
+                    <li><a href="#" id="predict-nav-link">Predict</a></li>
+                    <li><a href="#" id="contact-nav-link">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Landing Page Section -->
+    <section class="hero" id="landing-page">
+        <div class="hero-content">
+            <h1>Welcome to <span class="highlight">Municipal Waste Classification</span></h1>
+            <p>This platform allows you to upload images of waste materials, and our advanced machine learning model will classify them into appropriate categories. Proper waste classification helps in efficient recycling and waste management, making our environment cleaner and more sustainable.</p>
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="get-started-btn">Get Started</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section (Part of Landing Page) -->
+    <section class="features" id="features-section">
+        <div class="features-container">
+            <h2>Why Choose Our Platform?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI-Powered Classification</h3>
+                    <p>Advanced machine learning algorithms for accurate waste type identification</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌱</div>
+                    <h3>Environmental Impact</h3>
+                    <p>Contributing to a cleaner environment through proper waste management</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>User-Friendly Interface</h3>
+                    <p>Simple and intuitive design for seamless user experience</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Fast Processing</h3>
+                    <p>Quick and efficient image analysis with instant results</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Waste Classification Section (Initially Hidden) -->
+    <section class="waste-classification-section" id="waste-classification">
+        <!-- Back button moved inside the section and its position adjusted via CSS -->
+        <a href="#" class="back-btn" id="back-to-home-btn">← Back to Home</a>
+        <div class="container">
+            <h1>CleanTech: Waste Classification</h1>
+            <p>Upload an image of waste to classify it into Biodegradable, Recyclable, or Trash using our advanced AI system.</p>
+            <!-- IMPORTANT: Remove action attribute and add ID for JS handling -->
+            <form id="upload-form" method="POST" enctype="multipart/form-data" class="upload-form">
+                <div class="file-input-wrapper">
+                    <label for="pc_image" class="file-input-label">
+                        📁 Choose Image to Upload (JPG, PNG, GIF)
+                    </label>
+                    <input type="file" id="pc_image" name="pc_image" accept="image/*" required>
+                </div>
+                <button type="submit">🔍 Predict Waste Type</button>
+            </form>
+
+            <!-- Loading and Error Indicators -->
+            <div id="loading-indicator" style="display: none; margin-top: 20px; color: #4CAF50;">
+                Processing image... Please wait.
+            </div>
+            <div id="error-message-display" style="display: none; margin-top: 20px; color: red;"></div>
+
+            <!-- Prediction Result Section: This is where the image and prediction will appear -->
+            <div id="prediction-result" style="margin-top: 30px; padding: 20px; background-color: rgba(255, 255, 255, 0.1); border-radius: 10px; display: none;">
+                <div id="uploaded-image-display" style="margin-top: 20px;">
+                    <img id="result-image" src="" alt="Uploaded Waste Image" style="max-width: 100%; height: auto; border-radius: 8px; border: 2px solid #4CAF50;">
+                </div>
+                <h3>Prediction Result:</h3>
+                <p id="predicted-label" style="font-size: 1.2rem; font-weight: bold; color: #4CAF50;"></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section (Initially Hidden) -->
+    <section class="about-us-section" id="about-us-page">
+        <!-- Back button moved inside the section and its position adjusted via CSS -->
+        <a href="#" class="back-btn-about" id="back-to-home-from-about-btn">← Back to Home</a>
+        <header class="header-about"> <h1>🌱 GreenGuard Insights</h1>
+            <p>Pioneering Sustainable Waste Management</p>
+        </header>
+
+        <div class="content-section">
+            <h2>🚀 About Us</h2>
+            <p>
+                At **GreenGuard Insights**, we believe that sustainable cities start with smart waste management. 
+                Founded with a mission to revolutionize municipal waste systems, we are dedicated to driving 
+                **environmental innovation through technology**.
+            </p>
+            <p>
+                Our work focuses on developing and deploying **intelligent waste classification systems** that help 
+                municipalities and waste management companies make data-driven decisions. By improving how waste is identified, 
+                sorted, and processed, we aim to significantly reduce landfill use, increase recycling rates, and promote 
+                environmental responsibility at the community level.
+            </p>
+            <p>
+                We don’t just provide services — we build **solutions that scale**, designed for long-term impact. 
+                From integrating AI-powered waste classifiers to implementing real-time monitoring tools, our approach is 
+                both scientific and practical.
+            </p>
+            <p>
+                GreenGuard Insights operates at the intersection of **environmental science, engineering, and data analytics**, 
+                working closely with public agencies, private enterprises, and research institutions to create cleaner, more 
+                efficient urban ecosystems.
+            </p>
+            <p>
+                We envision a future where waste is not a burden but a **resource** — and we’re committed to making 
+                that vision a reality.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2>🔍 Our Services</h2>
+            <ul>
+                <li>**Comprehensive Waste Analysis:** Detailed classification of municipal waste based on type and recyclability.</li>
+                <li>**Continuous Monitoring:** Real-time tracking of waste processing to improve recycling and disposal efficiency.</li>
+                <li>**Landfill Reduction Solutions:** Innovative strategies to minimize landfill usage by detecting and separating recyclables early in the process.</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>👥 Our Team</h2>
+            <p>
+                Our strength is our people. GreenGuard Insights unites **environmental scientists, data analysts, software engineers, 
+                and waste management professionals**—bringing together diverse expertise to solve complex challenges in municipal 
+                waste management and sustainability.
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact Us Section (New, Initially Hidden) -->
+    <section class="contact-us-section" id="contact-us-page">
+        <!-- Back button moved inside the section and its position adjusted via CSS -->
+        <a href="#" class="back-btn-contact" id="back-to-home-from-contact-btn">← Back to Home</a>
+        <div class="section-title">
+            <h2>Contact Us</h2>
+            <p>We are here to help you make the best choices for a sustainable environment and
+                effective waste management. Reach out to us for more information about our
+                services, or to learn how we can help you ensure proper classification and
+                disposal of municipal waste.</p>
+        </div>
+        <div class="row">
+            <div class="col-lg-5 d-flex align-items-stretch">
+                <div class="info">
+                    <div class="address">
+                        <i class="bi bi-geo-alt"></i>
+                        <h4>Location:</h4>
+                        <p>Gudivada-521301</p>
+                    </div>
+                    <div class="email">
+                        <i class="bi bi-envelope"></i>
+                        <h4>Email:</h4>
+                        <p>nagetidharmesh@gmail.com</p>
+                    </div>
+                    <div class="phone">
+                        <i class="bi bi-phone"></i>
+                        <h4>Call:</h4>
+                        <p>+91 6305608652</p>
+                    </div>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12097.433213460943!2d-74.0062269!3d40.7101282!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xb89d1c68bc499443!2sDowntown+Conference+Center!5e0!3m2!1smk!2sbg!4v1539943755621" frameborder="0" style="border:0; width: 100%; height: 290px;" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="col-lg-7 mt-5 mt-lg-0 d-flex align-items-stretch">
+                <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="name">Your Name</label>
+                            <input type="text" name="name" class="form-control" id="name" required>
+                        </div>
+                        <div class="form-group col-md-6 mt-3 mt-md-0">
+                            <label for="email">Your Email</label>
+                            <input type="email" class="form-control" name="email" id="email" required>
+                        </div>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="subject">Subject</label>
+                        <input type="text" class="form-control" name="subject" id="subject" required>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="message">Message</label>
+                        <textarea class="form-control" name="message" rows="10" required></textarea>
+                    </div>
+                    <div class="my-3">
+                        <div class="loading">Loading</div>
+                        <div class="error-message"></div>
+                        <div class="sent-message">Your message has been sent. Thank you!</div>
+                    </div>
+                    <div class="text-center"><button type="submit">Send Message</button></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2025 Municipal Waste Classification. All rights reserved.</p>
+    </footer>
+
+    <!-- Custom Modal Structure -->
+    <div id="customAlertModal" class="custom-modal">
+        <div class="custom-modal-content">
+            <span class="custom-modal-close-button">&times;</span>
+            <p id="customAlertMessage"></p>
+            <button id="customAlertOkButton">OK</button>
+        </div>
+    </div>
+
+
+    <script>
+        // DOM Elements
+        const landingPage = document.getElementById('landing-page');
+        const featuresSection = document.getElementById('features-section');
+        const wasteClassificationSection = document.getElementById('waste-classification');
+        const aboutUsPage = document.getElementById('about-us-page');
+        const contactUsPage = document.getElementById('contact-us-page');
+        
+        const getStartedBtn = document.getElementById('get-started-btn');
+        const predictNavLink = document.getElementById('predict-nav-link');
+        const homeNavLink = document.getElementById('home-nav-link');
+        const aboutNavLink = document.getElementById('about-nav-link');
+        const contactNavLink = document.getElementById('contact-nav-link');
+
+        const backToHomeBtn = document.getElementById('back-to-home-btn');
+        const backToHomeFromAboutBtn = document.getElementById('back-to-home-from-about-btn');
+        const backToHomeFromContactBtn = document.getElementById('back-to-home-from-contact-btn');
+        const mainLogo = document.getElementById('main-logo');
+
+        // Elements for prediction display and messages
+        const uploadForm = document.getElementById('upload-form');
+        const pcImageInput = document.getElementById('pc_image');
+        const predictionResultDiv = document.getElementById('prediction-result');
+        const predictedLabelSpan = document.getElementById('predicted-label');
+        const resultImage = document.getElementById('result-image');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const errorMessageDisplay = document.getElementById('error-message-display');
+
+        // Custom Modal Elements
+        const customAlertModal = document.getElementById('customAlertModal');
+        const customAlertMessage = document.getElementById('customAlertMessage');
+        const customAlertCloseButton = document.querySelector('.custom-modal-close-button');
+        const customAlertOkButton = document.getElementById('customAlertOkButton');
+
+        // Function to show custom modal (replaces alert())
+        function showAlert(message) {
+            customAlertMessage.textContent = message;
+            customAlertModal.style.display = 'flex'; // Use flex to center
+        }
+
+        // Event listeners for custom modal
+        customAlertCloseButton.onclick = function() {
+            customAlertModal.style.display = 'none';
+        }
+        customAlertOkButton.onclick = function() {
+            customAlertModal.style.display = 'none';
+        }
+        window.onclick = function(event) {
+            if (event.target == customAlertModal) {
+                customAlertModal.style.display = 'none';
+            }
+        }
+
+
+        // Function to hide all content sections
+        function hideAllSections() {
+            landingPage.style.display = 'none';
+            featuresSection.style.display = 'none';
+            wasteClassificationSection.style.display = 'none';
+            aboutUsPage.style.display = 'none';
+            contactUsPage.style.display = 'none';
+            
+            // Hide all back buttons
+            backToHomeBtn.style.display = 'none';
+            backToHomeFromAboutBtn.style.display = 'none';
+            backToHomeFromContactBtn.style.display = 'none';
+
+            // Hide messages and prediction result when switching pages
+            loadingIndicator.style.display = 'none';
+            errorMessageDisplay.style.display = 'none';
+            predictionResultDiv.style.display = 'none'; // Ensure result is hidden on page switch
+        }
+
+        // Function to remove 'active' class from all navigation links
+        function removeActiveClassFromNav() {
+            homeNavLink.classList.remove('active');
+            aboutNavLink.classList.remove('active');
+            predictNavLink.classList.remove('active');
+            contactNavLink.classList.remove('active');
+        }
+
+        // Functions to show specific sections
+        function showLandingPage() {
+            hideAllSections();
+            landingPage.style.display = 'flex'; /* Use flex for hero section for centering */
+            featuresSection.style.display = 'block'; /* Use block for features section */
+            removeActiveClassFromNav();
+            homeNavLink.classList.add('active');
+            mainLogo.textContent = 'Municipal Waste Classification';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showWasteClassificationPage() {
+            hideAllSections();
+            wasteClassificationSection.style.display = 'flex'; /* Use flex for waste classification section */
+            // Ensure the back button for this section is displayed
+            // and the section has position: relative set in CSS
+            backToHomeBtn.style.display = 'block'; 
+            removeActiveClassFromNav();
+            predictNavLink.classList.add('active');
+            mainLogo.textContent = 'CleanTech';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Clear previous results when showing the classification page
+            predictedLabelSpan.textContent = '';
+            resultImage.src = '';
+            predictionResultDiv.style.display = 'none'; // Hide result div when navigating to predict page
+        }
+
+        function showAboutUsPage() {
+            hideAllSections();
+            aboutUsPage.style.display = 'flex'; /* Use flex for about us section */
+            // Ensure the back button for this section is displayed
+            // and the section has position: relative set in CSS
+            backToHomeFromAboutBtn.style.display = 'block'; 
+            removeActiveClassFromNav();
+            aboutNavLink.classList.add('active');
+            mainLogo.textContent = 'GreenGuard Insights';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showContactUsPage() {
+            hideAllSections();
+            contactUsPage.style.display = 'flex'; /* Use flex for contact us section */
+            // Ensure the back button for this section is displayed
+            // and the section has position: relative set in CSS
+            backToHomeFromContactBtn.style.display = 'block'; 
+            removeActiveClassFromNav();
+            contactNavLink.classList.add('active');
+            mainLogo.textContent = 'Contact Us';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Main Navigation Event Listeners
+        getStartedBtn.addEventListener('click', showWasteClassificationPage);
+        predictNavLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showWasteClassificationPage();
+        });
+        homeNavLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showLandingPage();
+        });
+        aboutNavLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showAboutUsPage();
+        });
+        contactNavLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showContactUsPage();
+        });
+
+        // Back to Home Button Listeners
+        backToHomeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showLandingPage();
+        });
+        backToHomeFromAboutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showLandingPage();
+        });
+        backToHomeFromContactBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showLandingPage();
+        });
+        mainLogo.addEventListener('click', (e) => {
+            e.preventDefault();
+            showLandingPage();
+        });
+
+        // Prediction Form Submission (AJAX)
+        if (uploadForm) { // Check if the form exists before adding listener
+            uploadForm.addEventListener('submit', async (e) => {
+                e.preventDefault(); // Prevent default form submission (stops page reload)
+
+                // Hide previous results/errors and show loading indicator
+                predictionResultDiv.style.display = 'none';
+                errorMessageDisplay.style.display = 'none';
+                loadingIndicator.style.display = 'block';
+
+                const formData = new FormData(uploadForm); // Create FormData object from the form
+
+                try {
+                    const response = await fetch('/predict_api', { // Send request to the Flask API endpoint
+                        method: 'POST',
+                        body: formData, // The FormData object automatically sets the correct headers
+                    });
+
+                    const data = await response.json(); // Parse the JSON response from the server
+
+                    loadingIndicator.style.display = 'none'; // Hide loading indicator
+
+                    if (response.ok) {
+                        // If the response is successful (status 200-299)
+                        predictedLabelSpan.textContent = data.prediction; // Set the predicted label
+                        resultImage.src = data.uploaded_image_url; // Set the source of the uploaded image
+                        predictionResultDiv.style.display = 'block'; // Show the result div
+                        showAlert(`✅ Prediction: ${data.prediction}`); // Use custom alert
+                    } else {
+                        // If the response indicates an error
+                        errorMessageDisplay.textContent = `Error: ${data.error || 'Something went wrong.'}`;
+                        errorMessageDisplay.style.display = 'block'; // Show the error message
+                        showAlert(`❌ Error: ${data.error || 'Something went wrong.'}`); // Use custom alert
+                    }
+
+                } catch (error) {
+                    // Handle network errors or issues with parsing the response
+                    console.error('Fetch error:', error);
+                    loadingIndicator.style.display = 'none'; // Hide loading indicator on error
+                    errorMessageDisplay.textContent = `Network error or unexpected issue: ${error.message}`;
+                    errorMessageDisplay.style.display = 'block'; // Show general error message
+                    showAlert(`❌ Request failed: ${error.message}`); // Use custom alert
+                }
+            });
+        }
+
+        pcImageInput.addEventListener('change', function () {
+    const label = document.querySelector('.file-input-label');
+    const file = this.files[0];
+
+    if (file) {
+        label.textContent = `Selected: ${file.name}`;
+
+        // Display preview image
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            resultImage.src = e.target.result; // Show preview in image tag
+            predictionResultDiv.style.display = 'block'; // Show preview box
+            predictedLabelSpan.textContent = 'Preview only: prediction will show after submission.';
+        };
+        reader.readAsDataURL(file);
+    } else {
+        label.textContent = '📁 Choose Image to Upload (JPG, PNG, GIF)';
+        predictionResultDiv.style.display = 'none';
+        resultImage.src = '';
+        predictedLabelSpan.textContent = '';
+    }
+});
+
+
+        // Initial state on page load
+        showLandingPage();
+    </script>
+</body>
+</html>
